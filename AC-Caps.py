@@ -15,7 +15,7 @@ global keys
 import random
 from sklearn.preprocessing import LabelEncoder
 from keras_utils import Capsule
-
+from keras import utils as np_utils
 
 np.random.seed(0)
 np.set_printoptions(threshold=np.inf)
