@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
-
 from keras.optimizers import Adam,SGD,RMSprop
 from sklearn.metrics import roc_curve, auc, roc_auc_score
-from keras.callbacks import TensorBoard,EarlyStopping,ModelCheckpoint
 import numpy as np
 from keras.models import load_model
 from keras.backend import *
-import csv
 import time
 import keras
-#from new_word2vec import train_word2vec
-from keras.callbacks import ReduceLROnPlateau, ModelCheckpoint,ReduceLROnPlateau,Callback
-from keras.models import *
+from keras.callbacks import TensorBoard,EarlyStopping,ModelCheckpoint, ReduceLROnPlateau, ModelCheckpoint,ReduceLROnPlateau,Callback
 from keras.layers import *
 from keras.datasets import imdb
 from keras.preprocessing import sequence
@@ -23,43 +18,27 @@ from Bio import SeqIO,motifs
 from Bio.Seq import Seq
 from Bio.Alphabet import IUPAC
 from keras.regularizers import l2
-# Criar uma lista com as letras do dicionario e armazenar o valor 
 global keys
 from keras import backend as K
 from capsule_layer import CategoryCap, PrimaryCap, Length, Mask
 from One_Hot_Encoder import *
 import random
-import pickle 
-import itertools
-from collections import Counter
 from sklearn.preprocessing import LabelEncoder
-from keras import utils as np_utils
 from keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import GridSearchCV
-from keras_utils import Capsule, AttentionWithContext,Attention
-#from Capsule import *
+from keras_utils import Capsule
 from sklearn import metrics
 from sklearn.metrics import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold
-from keras.backend import clear_session
-#from ind_rnn import IndRNNCell, RNN
-from capsule_layer import CategoryCap, PrimaryCap, Length, Mask
-#from seq_self_attention import SeqSelfAttention
 from keras.utils import plot_model
-from Mish import Mish
 np.random.seed(0)
 np.set_printoptions(threshold=np.inf)
-
-
 batch_size = 16
 num_epochs =50
 max_len1=97
 max_features = 100
-
 DNAelements = 'ACGT'
 RNAelements = 'ACGU'
-proteinElements = 'ACDEFGHIKLMNPQRSTVWY'
-
 def pseudoKNC(x, k):
         ### k-mer ###
         ### A, AA, AAA
@@ -367,7 +346,7 @@ def get_cnn_network_one(maxlen):
                         filter_length=14,
                         border_mode="valid",
                         subsample_length=1)(model_input)
-    #正则化  @小谢
+    x=BatchNormalization()(x)
     x=Activation('relu')(x)
     x=MaxPooling1D(pool_length=3)(x)
     x = Dropout(0.5)(x)
@@ -427,37 +406,7 @@ def run_network(net_one,x1,model_input1, x_train, y_train ,x_test, y_test):
 
 if __name__ == "__main__":
     print("Load data...")
-    filename='01_HITSCLIP_AGO2Karginov2013a_hg19'
-#    filename="02_HITSCLIP_AGO2Karginov2013c_hg19"
-#    filename="03_HITSCLIP_AGO2Karginov2013b_hg19"
-#    filename="04_HITSCLIP_AGO2Karginov2013d_hg19"
-#    filename="05_HITSCLIP_AGO2Karginov2013f_hg19"
-#    filename="06_HITSCLIP_AGO2Karginov2013e_hg19"
-#    filename="07_PARCLIP_AGO2Gottwein2011a_hg19"
-#    filename="08_PARCLIP_AGO2Gottwein2011b_hg19"
-#    filename="09_PARCLIP_AGO2Skalsky2012a_hg19"
-#    filename="10_PARCLIP_AGO2Skalsky2012b_hg19"
-#    filename="11_PARCLIP_AGO2Skalsky2012e_hg19"
-#    filename="12_HITSCLIP_DGCR8Macias2012d_hg19"
-#    filename="13_HITSCLIP_DGCR8Macias2012c_hg19"
-#    filename="14_HITSCLIP_DGCR8Macias2012a_hg19"
-#    filename="15_HITSCLIP_DGCR8Macias2012b_hg19"
-#    filename="16_HITSCLIP_EIF4A3Sauliere2012a_hg19"
-#    filename="17_HITSCLIP_EIF4A3Sauliere2012b_hg19"
-#    filename="18_HITSCLIP_EWSR1Paronetto2014_hg19"
-#    filename="19_PARCLIP_FMR1_Ascano2012b_hg19"
-#    filename="20_PARCLIP_FMR1_Ascano2012a_hg19"
-#    filename="21_PARCLIP_FMR1_Ascano2012c_hg19"
-#    filename="22_HITSCLIP_FUSNakaya2013c_hg19"
-#    filename="23_HITSCLIP_FUSNakaya2013d_hg19"
-#    filename="24_HITSCLIP_FUSNakaya2013e_hg19"
-#    filename="25_PARCLIP_HuR_mukherjee2011_hg19"
-#    filename="26_PARCLIP_IGF2BP123_Hafner2010d_hg19"
-#    filename="27_PARCLIP_RBM10Wang2013a_hg19"
-#    filename="28_PARCLIP_RBM10Wang2013b_hg19"
-#    filename="29_iCLIP_TDP-43_tollervey2011_hg19"
-#    filename="30_iCLIP_TIAL1_wang2010b_hg19"
-#    filename="31_PARCLIP_ZC3H7B_Baltz2012e_hg19"
+    filename='01_HITSCLIP_AGO2Karginov2013a_hg19' #chage other datatset 
     number=1
     x_train, y_train,encoder1= load_data(filename,number)
 #    print("x_dev shape:", x_dev.shape)
@@ -494,8 +443,8 @@ if __name__ == "__main__":
     with open(metricsfile, 'w') as f:
          writething = "\n".join(map(str, out_rel))
          f.write(writething)
-    print("平均ACC——%.4f%%" ,acc)       
-    print("平均sensitivity——%.4f%% " ,sensitivity )       
-    print("平均specificity——%.4f%% ",specificity )       
-    print("平均MCC——%.4f%% " ,MCC)       
-    print("平均roc_auc——%.4f%% " ,roc_auc)       
+    print("ACC——%.4f%%" ,acc)       
+    print("sensitivity——%.4f%% " ,sensitivity )       
+    print("specificity——%.4f%% ",specificity )       
+    print("MCC——%.4f%% " ,MCC)       
+    print("roc_auc——%.4f%% " ,roc_auc)       
