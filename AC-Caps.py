@@ -4,6 +4,7 @@ from sklearn.metrics import roc_curve, auc, roc_auc_score
 import numpy as np
 from keras.models import load_model,Sequential,Model
 from keras.backend import *
+from keras.layers import *
 import time
 from keras.callbacks import TensorBoard,EarlyStopping,  ModelCheckpoint,ReduceLROnPlateau,Callback
 from keras.layers import *
@@ -20,7 +21,7 @@ from keras import utils as np_utils
 np.random.seed(0)
 np.set_printoptions(threshold=np.inf)
 batch_size = 16
-num_epochs =50
+num_epochs =30
 max_len1=97
 max_features = 100
 DNAelements = 'ACGT'
@@ -113,9 +114,7 @@ def transfer_label_from_prob(proba):
 
 
 def load_data_file(inputfile,seq=True):
-    """
-        Load data matrices from the specified folder.
-    """
+    
     path = os.path.dirname(inputfile)
     data = dict()
     if seq:       
@@ -175,7 +174,7 @@ def split_training_validation(classes, validation_size = 0.2, shuffle = False):
         indices_cl=indices[classes==cl]
         num_samples_cl=len(indices_cl)
         if shuffle:
-            random.shuffle(indices_cl) # in-place shuffle
+            random.shuffle(indices_cl) # 
         num_samples_each_split=int(num_samples_cl*validation_size)
         res=num_samples_cl - num_samples_each_split
         
@@ -396,7 +395,7 @@ if __name__ == "__main__":
     fw = open('result_file.txt', 'w')
     net_one,x1,model_input1= get_cnn_network_one(max_len1 )
     mymodel= calculate_auc(net_one,x1,model_input1, x_train, y_train ,x_test, y_test)
-    model = load_model('my_net_model.h5',custom_objects={'Capsule': Capsule,'CategoryCap':CategoryCap})
+    model = load_model('my_net_model.h5',custom_objects={'Capsule': Capsule})
     test_predictions = model.predict(x_test,verbose=1)
     outfile='./prediction.txt'
     predictions_label = transfer_label_from_prob(test_predictions[:, 1])
