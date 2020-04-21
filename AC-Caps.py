@@ -5,32 +5,18 @@ import numpy as np
 from keras.models import load_model
 from keras.backend import *
 import time
-import keras
-from keras.callbacks import TensorBoard,EarlyStopping,ModelCheckpoint, ReduceLROnPlateau, ModelCheckpoint,ReduceLROnPlateau,Callback
+from keras.callbacks import TensorBoard,EarlyStopping,  ModelCheckpoint,ReduceLROnPlateau,Callback
 from keras.layers import *
-from keras.datasets import imdb
 from keras.preprocessing import sequence
-import tensorflow as tf
-import pandas as pd 
-import os, argparse, math , re
-from decimal import Decimal
+import os
 from Bio import SeqIO,motifs
 from Bio.Seq import Seq
-from Bio.Alphabet import IUPAC
-from keras.regularizers import l2
 global keys
-from keras import backend as K
-from capsule_layer import CategoryCap, PrimaryCap, Length, Mask
-from One_Hot_Encoder import *
 import random
 from sklearn.preprocessing import LabelEncoder
-from keras.wrappers.scikit_learn import KerasClassifier
-from sklearn.model_selection import GridSearchCV
 from keras_utils import Capsule
-from sklearn import metrics
-from sklearn.metrics import roc_curve, auc
-from sklearn.model_selection import StratifiedKFold
-from keras.utils import plot_model
+
+
 np.random.seed(0)
 np.set_printoptions(threshold=np.inf)
 batch_size = 16
@@ -143,14 +129,6 @@ def load_data(filename,number):
     sentences = seq_data["seq"]
     seq_label = seq_data["Y"]
 
-#    training_indice, training_label, val_indice, val_label = split_training_validation(seq_label,shuffle = True)#shuffle = True  数据集标签打乱不然，训练时候发现train acc高，验证集acc 低
-#    x_train = sentences[training_indice]
-#    training_label = seq_label[training_indice]
-#    
-#    x_validation = sentences[val_indice]
-#    val_label = seq_label[val_indice] 
-#    x_totletrain = totalsentences[training_indice]
-#    x_totalvalidation = totalsentences[val_indice]
     sentences=np.array(sentences)
 #    totalsentences=np.array(totalsentences)
     seq_label=np.array(seq_label)
