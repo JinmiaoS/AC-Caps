@@ -6,7 +6,7 @@ The  AC-Caps is supported on windows operating system python 3.6 Keras 2.1.6 lib
 
 Execute Step:
 1 Configure the hyperparameters 
-2 Run AC-Caps, The final evaluation metric is written to the text format (metrics_file.txt).
+2 Run AC-Caps.The final evaluation metric is written to the text format (metrics_file.txt).
 3 The final prediction results are stored in predict.txt.
 
 
